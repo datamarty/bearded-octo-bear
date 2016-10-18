@@ -50,8 +50,12 @@ complete <- function(directory, id = 1:332) {
 
         }
         
+        data.frame(id = id, nobs = numObs) # initialise output data frame
+        
         #Implement the logic on the data set
-        outdata <- data #nrow(!is.na(data$ID))
-        return(head(outdata))
+        mydata <- complete.cases(data) # assign the complete cases to OKdata
+        #OKcount <- sum(OKdata)
+        #OKcount <- aggregate(OKdata, list(by = OKdata$ID), FUN = nrow)
+        return(aggregate(complete.cases(mydata), list(by = mydata$ID), FUN = sum))
         
 }
