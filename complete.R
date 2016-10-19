@@ -4,58 +4,52 @@
 #**     Oct 2016            **#
 
 complete <- function(directory, id = 1:332) {
-## 'directory' is a character vector of length 1 indicating
-## the location of the csv files
-
-## 'id' is an integer vector indicating the monitor ID numbers
-## to be used
-
-## Return a data frame of the form:
-## id   nobs
-## 1    117
-## 2    1041
-## ...
-## where 'id' is the monitor ID number and 'nobs' is the
-## number of complete cases
-
-        #ids <- c(1,4,17,122) #Debug list of files for testing
-        #directory <- "specdata" #Debug directory path for testing
-        files <- c()
-        ids <- id
-        directory <- paste("./", directory, "/", sep = "")
-        #Create vectors dependent on file ID passed
-        SingleDigit <- ids[ids > 0 & ids < 10]
-        DoubleDigit <- ids[ids > 9 & ids < 100]
-        TripleDigit <- ids[ids > 99]
-        #Append zeros to file if needed
-        if(length(SingleDigit) > 0){
-                SDFiles <- paste(directory, "00", SingleDigit,".csv", sep = "")
-                files <- SDFiles
-        }
-        if(length(DoubleDigit) > 0){
-                DDFiles <- paste(directory, "0", DoubleDigit, ".csv", sep = "")
-                files <- c(files, DDFiles)
-        }
-        if(length(TripleDigit) > 0){
-                TDFiles <- paste(directory, TripleDigit, ".csv", sep = "")
-                files <- c(files, TDFiles)
-        }
-
-        #Read first file to create variables in a data frame
-        data <- read.csv(files[1])
-
-        #Read remaining files and rbind them to dataset
-        for (f in files[-1]) {
-                data <- rbind(data,read.csv(f))
-
-        }
-        
-        data.frame(id = id, nobs = numObs) # initialise output data frame
-        
-        #Implement the logic on the data set
-        mydata <- complete.cases(data) # assign the complete cases to OKdata
-        #OKcount <- sum(OKdata)
-        #OKcount <- aggregate(OKdata, list(by = OKdata$ID), FUN = nrow)
-        return(aggregate(complete.cases(mydata), list(by = mydata$ID), FUN = sum))
-        
+  ## 'directory' is a character vector of length 1 indicating
+  ## the location of the csv files
+  
+  ## 'id' is an integer vector indicating the monitor ID numbers
+  ## to be used
+  
+  ## Return a data frame of the form:
+  ## id   nobs
+  ## 1    117
+  ## 2    1041
+  ## ...
+  ## where 'id' is the monitor ID number and 'nobs' is the
+  ## number of complete cases
+  
+  #ids <- c(1,4,17,122) #Debug list of files for testing
+  #directory <- "specdata" #Debug directory path for testing
+  files <- c()
+  ids <- id
+  directory <- paste("./", directory, "/", sep = "")
+  #Create vectors dependent on file ID passed
+  SingleDigit <- ids[ids > 0 & ids < 10]
+  DoubleDigit <- ids[ids > 9 & ids < 100]
+  TripleDigit <- ids[ids > 99]
+  #Append zeros to file if needed
+  if(length(SingleDigit) > 0){
+    SDFiles <- paste(directory, "00", SingleDigit,".csv", sep = "")
+    files <- SDFiles
+  }
+  if(length(DoubleDigit) > 0){
+    DDFiles <- paste(directory, "0", DoubleDigit, ".csv", sep = "")
+    files <- c(files, DDFiles)
+  }
+  if(length(TripleDigit) > 0){
+    TDFiles <- paste(directory, TripleDigit, ".csv", sep = "")
+    files <- c(files, TDFiles)
+  }
+  
+  #Read first file to create variables in a data frame
+  data <- read.csv(files[1])
+  
+  #Read remaining files and rbind them to dataset
+  for (f in files[-1]) {
+    data <- rbind(data,read.csv(f))
+  }
+  #Implement the logic on the data set
+  output <- aggregate(complete.cases(data), list(by = data$ID), FUN = sum)
+  colnames(output) <- c("id", "nobs")
+  return(output)
 }
