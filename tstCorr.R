@@ -2,7 +2,7 @@
 # |------------------------------------------------------------------------------------------|
 # | I N I T I A L I Z A T I O N |
 # |------------------------------------------------------------------------------------------|
-Init <- function(workDirStr = "C:/Users/mselway/Downloads/specdata/") {
+Init <- function(workDirStr = "C:/Users/mselway/Downloads/") {
         setwd(workDirStr)
 }
 
